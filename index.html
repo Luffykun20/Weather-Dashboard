@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+    <link rel="stylesheet" href="./assets/style.css" />
+    <title>Weather Dashboard</title>
+
+</head>
+<body>
+    <header>
+        <h1>Weather Dashboard</h1>
+    </header>
+    <main>
+        <aside>
+            <form>
+                <h2>Search for a City:</h2>
+                <input id="cities" name="city" placeholder="City" type="text" />
+                <button class="btn btn-info" id="search-btn">Search</button>
+            </form>
+            <div id="record">
+                 <button class="btn btn-secondary text-dark" >Atlanta</button>
+                 <button class="btn btn-secondary text-dark">Denver</button>
+                 <button class="btn btn-secondary text-dark">Seattle</button>
+                 <button class="btn btn-secondary text-dark">San Francisco</button>
+                 <button class="btn btn-secondary text-dark">Orlando</button>
+                 <button class="btn btn-secondary text-dark">New York</button>
+                 <button class="btn btn-secondary text-dark">Chicago</button>
+                 <button class="btn btn-secondary text-dark">Austin</button>
+            </div>
+        </aside>
+        <div id="weather-display">
+            <div id="current">
+                <h2>Atlanta 1/1/2023</h2>
+                <p>Temp: 56 F</p>
+                <p>Wind: 4 mph</p>
+                <p>Humidity: 79%</p>
+            </div>
+            <div id="forecast">
+                <h3> 5-Day Forecast</h3>
+                <div id="cards">
+                    <div class="card">
+                        <h2>Atlanta 1/1/2023</h2>
+                        <p>Temp: 56 F</p>
+                        <p>Wind: 4 mph</p>
+                        <p>Humidity: 79%</p>
+                    </div>
+                    <div class="card">
+                        <h2>Atlanta 1/1/2023</h2>
+                        <p>Temp: 56 F</p>
+                        <p>Wind: 4 mph</p>
+                        <p>Humidity: 79%</p>
+                    </div>
+                    <div class="card">
+                        <h2>Atlanta 1/1/2023</h2>
+                        <p>Temp: 56 F</p>
+                        <p>Wind: 4 mph</p>
+                        <p>Humidity: 79%</p>
+                    </div>
+                    <div class="card">
+                        <h2>Atlanta 1/1/2023</h2>
+                        <p>Temp: 56 F</p>
+                        <p>Wind: 4 mph</p>
+                        <p>Humidity: 79%</p>
+                    </div>
+                    <div class="card">
+                        <h2>Atlanta 1/1/2023</h2>
+                        <p>Temp: 56 F</p>
+                        <p>Wind: 4 mph</p>
+                        <p>Humidity: 79%</p>
+                    </div>
+                </div>
+            </div>
+        </div>          
+    </main>
+
+
+
+    <script src="./assets/script.js"></script>
+</body>
+
+</html>
