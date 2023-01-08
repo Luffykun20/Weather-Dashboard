@@ -2,11 +2,20 @@ const apiKey = "9f22897565b785c5e1809cff5dde2ef9";
 //const onecallLink = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&appid=${apiKey}`;
 //const geocodeLink = `https://api.openweathermap.org/geo/1.0/direct?q=${city}&appid=${apiKey}`
 var cities = document.getElementById("city-input");
+var worldCities = [];
 
 function searchCity(event) {
     event.preventDefault();
     const towns = cities.value;
-    getCoords(towns);
+    if (worldCities.includes(towns) === false ) {
+        worldCities.push(towns);
+        localStorage.setItem("history",JSON.stringify(worldCities));
+
+        displayCities();
+    }
+ 
+    getCoords(towns);   
+    
 }
 
 var searchButton = document.getElementById("search-btn");
@@ -49,7 +58,7 @@ function getForecast(city, lat, lon) {
 }
 
 var presentBox = document.getElementById("current");
-var foreCast = document.getElementById("forecast");
+var foreCastBox = document.getElementById("cards");
 
 function htmlCreater(city, current, daily) {
 
@@ -66,7 +75,7 @@ function htmlCreater(city, current, daily) {
 
     //temp
     const presentTemp = document.createElement("p");
-    presentTemp.textContent = `Temp: ${current.temp}`
+    presentTemp.textContent = `Temp: ${kelvToFahr(current.temp)}°F`
     
     //wind
     const presentWind = document.createElement("p");
@@ -82,13 +91,30 @@ function htmlCreater(city, current, daily) {
     presentBox.appendChild(presentHumidity);
 
     //5-day forecast card
-    foreCast.replaceChildren();
-    //card
-    //date
-    //icon
-    //temp
-    //wind
-    //humidity
+    foreCastBox.replaceChildren();
+    for (let i = 0; i < daily.length; i++) {
+        const day =daily[i];
+
+        //card
+        const dayCard = document.createElement("div");
+        dayCard.className = "card";
+        dayCard.innerHTML = `
+        <h2>${unixToDate(day.dt)}</h2>
+        <img src="http://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png"
+        <p>Temp: ${kelvToFahr(day.temp.day)}°F</p>
+        <p>Wind: ${day.wind_speed} MPH</p>
+        <p>Humidity: ${day.humidity}%</p>
+        `;
+        foreCastBox.appendChild(dayCard);
+
+        //date
+        //icon
+        //temp
+        //wind
+        //humidity
+
+    }
+   
 }
 function unixToDate(unix) {
     const date = new Date(unix * 1000);
@@ -99,10 +125,37 @@ function unixToDate(unix) {
     return `${month}/${day}/${year}`
 
 }
+function kelvToFahr(K) {
+    let F = 1.8 * (K-273) + 32;
 
-//present.replaceChildren();
-//foreCast.replaceChildren();
+    return F.toFixed(2);
+}
 
+function displayCities() {
+    const localData = JSON.parse(localStorage.getItem("history"));
+    if (localData) {
+        worldCities = localData;
+        var record = document.getElementById("record");
+        record.innerHTML = "";
+
+        for ( let i = 0; i < worldCities.length; i++){
+            record.innerHTML += `<button class="btn btn-secondary text-dark directButton" >${worldCities[i]}</button>`
+        }
+        var directButton = document.querySelectorAll(".directButton");
+        for (let i = 0; i < directButton.length; i++){
+            directButton[i].addEventListener("click",function(){
+                let city = this.textContent;
+                getCoords(city);
+            })
+        }
+    }
+
+
+}
+
+displayCities();
+
+getCoords(worldCities[worldCities.length - 1])
 
 
 //var cities = document.getElementById("city-input");
