@@ -2,27 +2,17 @@
 const apiKey = "9f22897565b785c5e1809cff5dde2ef9";
 
 var cities = document.getElementById("city-input");
-var worldCities = [];
 
 // handles search button form
 function searchCity(event) {
     event.preventDefault();
+
     const towns = cities.value;
 
-    //checks if what we searched already exists
-    //If not, then push new search to empty array
-        if (worldCities.includes(towns) === false ) {
-        worldCities.push(towns);
-        //save to local storage
-        localStorage.setItem("history",JSON.stringify(worldCities));
+    getCoords(towns);
 
-
-        displayCities();
-    }
- 
-    getCoords(towns);   
-    
 }
+
 // adding click function to search button
 var searchButton = document.getElementById("search-btn");
 searchButton.addEventListener("click", searchCity)
@@ -90,7 +80,7 @@ function htmlCreater(city, current, daily) {
     //temperature 
     const presentTemp = document.createElement("p");
     presentTemp.textContent = `Temp: ${kelvToFahr(current.temp)}°F`
-    
+
     //wind
     const presentWind = document.createElement("p");
     presentWind.textContent = `Wind: ${current.wind_speed} MPH`;
@@ -107,7 +97,7 @@ function htmlCreater(city, current, daily) {
     //destroys all children in 5-day forecast cards so we can make copies
     foreCastBox.replaceChildren();
     for (let i = 0; i < daily.length; i++) {
-        const day =daily[i];
+        const day = daily[i];
 
         //card
         const dayCard = document.createElement("div");
@@ -122,9 +112,10 @@ function htmlCreater(city, current, daily) {
 
         foreCastBox.appendChild(dayCard);
 
-      
+
     }
-   
+
+    displayCities(city);
 }
 
 //convert unix to readable data format
@@ -141,42 +132,69 @@ function unixToDate(unix) {
 }
 //function to convert Kelvin units to fahrenheit units
 function kelvToFahr(K) {
-    let F = 1.8 * (K-273) + 32;
+    let F = 1.8 * (K - 273) + 32;
 
     return F.toFixed(2);
 }
 
-function displayCities() {
+
+function displayCities(city) {
     //get data from local storage
-    let localData = JSON.parse(localStorage.getItem("history"));
+    let searchHistory = JSON.parse(localStorage.getItem("history"));
 
-    // empty array becomes localstorage data
-    if (localData) {
-        worldCities = localData;
-    
+    // creates array if localData doesn't exist
+    if (!searchHistory) {
+        searchHistory = [];
+    }
 
-        var record = document.getElementById("record");
-        record.innerHTML = "";
+    //loop through search history and checks if searched cities already exist
+    for (let i = 0; i < searchHistory.length; i++) {
+        if (searchHistory[i] === city) {
 
-        //loop through search history and creates buttons for searched cities
-        for ( let i = 0; i < worldCities.length; i++){
-            record.innerHTML += `<button class="btn btn-secondary text-dark directButton" >${worldCities[i]}</button>`
+            searchHistory.splice(i, 1);
         }
-        var directButton = document.querySelectorAll(".directButton");
-        for (let i = 0; i < directButton.length; i++){
-            
-            // get textcontent and run fetch
-            directButton[i].addEventListener("click",function(){
-                let city = this.textContent;
-                getCoords(city);
-            })
-        }
+    }
+
+    //write new data over saved data
+    searchHistory.splice(0, 0, city);
+
+    //save to localStorage
+    localStorage.setItem("history", JSON.stringify(searchHistory));
+
+    loadRecord();
+}
+
+var record = document.getElementById("record");
+
+function loadRecord() {
+    record.replaceChildren();
+
+    let searchHistory = JSON.parse(localStorage.getItem("history"));
+
+    if (!searchHistory) {
+        return;
+    }
+
+    //loop through search history and creates buttons for cities already searched
+    for (let i = 0; i < searchHistory.length; i++) {
+        let cityButton = document.createElement("button");
+        cityButton.className = " btn btn-secondary cityBtn";
+        cityButton.textContent = searchHistory[i];
+        record.append(cityButton);
+
+
+        // get textcontent and run fetch function
+        cityButton.addEventListener("click", function(event){
+            event.preventDefault();
+
+            let cityName = event.target.textContent;
+            getCoords(cityName);
+        });
     }
 }
 
+//load cities records on page load
+loadRecord();
 
-//load search history on page load
-displayCities();
 
-getCoords(worldCities[worldCities.length - 1])
 
